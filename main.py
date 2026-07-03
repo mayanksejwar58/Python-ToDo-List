@@ -1,4 +1,21 @@
-tasks=[]
+import json
+
+FILE_NAME="tasks.json"
+
+def save_tasks(tasks):
+  with open(FILE_NAME,"w") as file:
+    json.dump(tasks, file, indent=4)
+
+def load_tasks():
+  try:
+    with open (FILE_NAME,"r")as file:
+      return json.load(file)
+  except FileNotFoundError:
+    return[]
+  except json.JSONDecodeError:
+    return[]
+
+tasks=load_tasks()
 
 def show_tasks(tasks):
   print("\n"+"="*45)
@@ -16,12 +33,14 @@ def no_task(tasks):
     print("There Is No Task")
     return True
   return False
+
 def add_task(tasks, task):
   new_task={
     "name":task,
     "completed":False
   }
   tasks.append(new_task)
+  save_tasks(tasks)
   print("Task Added Successfully!")
 
 def delete_task(tasks):
@@ -36,6 +55,7 @@ def delete_task(tasks):
     return
   if 1<=task_number<=len(tasks):
     deleted_task=tasks.pop(task_number-1)
+    save_tasks(tasks)
     print(f"'{deleted_task['name']}' Deleted Successfully!")
   else:
     print("Invalid Task Number")
@@ -53,9 +73,11 @@ def mark_task(tasks):
   if 1<=task_number<=len(tasks):
     if tasks[task_number-1]["completed"]:
       tasks[task_number-1]["completed"]=False
+      save_tasks(tasks)
       print("Marked task as Icomplete")
     else:
       tasks[task_number-1]["completed"]=True
+      save_tasks(tasks)
       print("Marked task as Complete")
   else:
     print("Invalid Task Number")
@@ -72,6 +94,7 @@ def edit_task(tasks):
   if 1<=number<=len(tasks):
     new_name=input("Enter New Name of the Task: ")
     tasks[number-1]["name"]=new_name
+    save_tasks(tasks)
     print("Task Updated Successfully")
   else:
     print("Invalid Task Number")
