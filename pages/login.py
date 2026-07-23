@@ -31,6 +31,6 @@ if st.button("Login"):
       st.error("Invalid Email or Password")
 
 st.page_link(
-  "pages/forget_password.py",
+  "pages/forgot_password.py",
   label="Forgot Password?"
 )
