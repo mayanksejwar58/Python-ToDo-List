@@ -21,6 +21,7 @@ class Auth:
       return False
     if not re.search(r"\d",password):
       return False
+    return True
 
   def register(self,username,email,password):
     if not self.valid_email(email):

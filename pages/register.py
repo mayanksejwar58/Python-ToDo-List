@@ -25,22 +25,22 @@ if st.button("Create Account"):
     st.error("Password cannot be empty")
   elif password!=confirm:
     st.error("Passwords do not match")
-else:
-  result= auth.register(username,email,password)
-  if result=="Success":
-    st.success("Account Created")
-  elif result=="Email Exists":
-    st.error("Email ALready Registered")
-  elif result=="Invalid Email":
-    st.error("Invalid Email Format")
-  elif result == "Weak Password":
-    st.error(
-      "Password must contain:\n"
-      "- Minimum 8 Characters\n"
-      "- Uppercase\n"
-      "- Lowercase\n"
-      "- Number"
-      )
+  else:
+    result= auth.register(username,email,password)
+    if result=="Success":
+      st.success("Account Created")
+    elif result=="Email Exists":
+      st.error("Email ALready Registered")
+    elif result=="Invalid Email":
+      st.error("Invalid Email Format")
+    elif result == "Weak Password":
+      st.error(
+        "Password must contain:\n"
+        "- Minimum 8 Characters\n"
+        "- Uppercase\n"
+        "- Lowercase\n"
+        "- Number"
+        )
 
 st.divider()
 st.page_link(
