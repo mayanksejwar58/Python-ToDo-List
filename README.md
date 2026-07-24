@@ -1,22 +1,26 @@
 # 📋 To-Do List App
 
-A modern To-Do List web application built using **Python**, **Streamlit**, **SQLite**, and **OOP** principles.
+A modern **Task Management Web Application** built using **Python**, **Streamlit**, and **Supabase** with secure authentication and cloud-based data storage.
 
-## ✨ Features
+---
 
-- 👤 User Registration & Login
-- 🔒 Secure Password Hashing (bcrypt)
-- 📧 Forgot Password using Email OTP
-- 🔑 Change Password
+## 🚀 Features
+
+- 👤 User Registration
+- 🔐 Secure Login
+- 🔑 Password Hashing using bcrypt
+- 📧 Forgot Password (OTP via Email)
+- 🔒 Change Password
 - ➕ Add Tasks
 - ✏️ Edit Tasks
 - 🗑 Delete Tasks
 - ✅ Mark Tasks as Completed
 - 🔍 Search Tasks
-- 📊 Task Statistics Dashboard
 - 📅 Due Date & Time
-- 🏷 Task Categories
+- 🏷 Categories
 - ⚡ Priority Levels
+- 📊 Dashboard Statistics
+- ☁️ Cloud Database (Supabase)
 
 ---
 
@@ -24,7 +28,7 @@ A modern To-Do List web application built using **Python**, **Streamlit**, **SQL
 
 - Python
 - Streamlit
-- SQLite
+- Supabase (PostgreSQL)
 - bcrypt
 - python-dotenv
 - SMTP (Gmail)
@@ -34,14 +38,14 @@ A modern To-Do List web application built using **Python**, **Streamlit**, **SQL
 ## 📂 Project Structure
 
 ```
-To-Do_List_App/
+To-Do_List_App
 │
 ├── app.py
-├── requirements.txt
 ├── README.md
-├── .env
+├── requirements.txt
 ├── .gitignore
-├── todo.db
+├── .streamlit/
+│   └── config.toml
 │
 ├── database/
 │   ├── auth.py
@@ -66,27 +70,37 @@ To-Do_List_App/
 
 ---
 
-## 🚀 Installation
+## ⚙️ Installation
 
-Clone the repository:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/python-ToDo-List.git
-```
-
-Go to the project folder:
+Clone the repository
 
 ```bash
-cd python-ToDo-List
+git clone https://github.com/mayanksejwar58/Python-ToDo-List.git
 ```
 
-Install dependencies:
+Move into the project
+
+```bash
+cd Python-ToDo-List
+```
+
+Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Run the application:
+Create a `.streamlit/secrets.toml` file
+
+```toml
+SUPABASE_URL="YOUR_SUPABASE_URL"
+SUPABASE_KEY="YOUR_SUPABASE_ANON_KEY"
+
+EMAIL_ADDRESS="YOUR_EMAIL"
+EMAIL_PASSWORD="YOUR_GMAIL_APP_PASSWORD"
+```
+
+Run the application
 
 ```bash
 streamlit run app.py
@@ -94,26 +108,27 @@ streamlit run app.py
 
 ---
 
-## 🔐 Environment Variables
+## 🌟 Highlights
 
-Create a `.env` file in the project root.
-
-```env
-EMAIL_ADDRESS=yourgmail@gmail.com
-EMAIL_PASSWORD=your_google_app_password
-```
+- Object-Oriented Programming (OOP)
+- Secure Authentication
+- Cloud Database using Supabase
+- Password Encryption with bcrypt
+- Email OTP Verification
+- Clean Streamlit UI
+- Multi-user Support
+- Persistent Cloud Storage
 
 ---
 
-## 📸 Features
+## 🚀 Future Improvements
 
-- Secure User Authentication
-- Email OTP Verification
-- Password Reset
-- Task Management
-- Search Functionality
-- Progress Tracking
-- Responsive Streamlit Interface
+- Dark Mode
+- Task Notifications
+- Calendar Integration
+- AI Task Suggestions
+- Mobile Responsive UI
+- User Profile Management
 
 ---
 
@@ -121,11 +136,14 @@ EMAIL_PASSWORD=your_google_app_password
 
 **Mayank Sejwar**
 
-B.Tech Artificial Intelligence & Data Science  
+B.Tech Artificial Intelligence & Data Science
+
 Madhav Institute of Technology & Science (MITS), Gwalior
+
+GitHub: https://github.com/mayanksejwar58
 
 ---
 
 ## 📄 License
 
-This project is created for educational and portfolio purposes.
+This project is released under the MIT License.
