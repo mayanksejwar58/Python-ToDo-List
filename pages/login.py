@@ -7,8 +7,8 @@ st.set_page_config(
 )
 auth=Auth()
 
-st.title("Login")
-st.caption("Welcome Back")
+st.title("🔐 Welcome Back")
+st.caption("Login to contine ")
 email=st.text_input("Email")
 password=st.text_input("Password",type="password")
 
@@ -30,7 +30,16 @@ if st.button("Login"):
     else:
       st.error("Invalid Email or Password")
 
-st.page_link(
-  "pages/forgot_password.py",
-  label="Forgot Password?"
-)
+st.divider()
+
+col1,col2=st.columns(2)
+with col1:
+  st.page_link(
+    "pages/forgot_password.py",
+    label="Forgot Password"
+  )
+with col2:
+  st.page_link(
+    "pages/register.py",
+    label="Create Account"
+  )

@@ -1,14 +1,15 @@
 import streamlit as st
+import time
 from database.auth import Auth 
 
 auth=Auth()
 
 st.set_page_config(
-  page_title="Register",
+  page_title="Sign-UP",
   page_icon="📝"
 )
-st.title("Register")
-st.caption("Create Your Account")
+st.title("Create Account")
+st.caption("Create Your Account to continue")
 
 username=st.text_input("Username")
 email=st.text_input("Email")
@@ -29,6 +30,8 @@ if st.button("Create Account"):
     result= auth.register(username,email,password)
     if result=="Success":
       st.success("Account Created")
+      time.sleep(2)
+      st.switch_page("pages/login.py")
     elif result=="Email Exists":
       st.error("Email ALready Registered")
     elif result=="Invalid Email":
@@ -45,5 +48,5 @@ if st.button("Create Account"):
 st.divider()
 st.page_link(
   "pages/login.py",
-  label="🔐 Already have an account?"
+  label="🔐 Already have an account? Login"
 )
