@@ -1,12 +1,11 @@
 import re
 import bcrypt
-import sqlite3
 from database.database import Database
 
 class Auth:
 
   def __init__(self):
-    self.db=Database()
+    self.db=Database().get_client()
 
   def valid_email(self,email):
     pattern=r"^[\w\.-]+@[\w\.-]+\.\w+$"
@@ -31,46 +30,44 @@ class Auth:
     hashed=bcrypt.hashpw(
       password.encode(),
       bcrypt.gensalt()
+    ).decode()
+
+    existing=(
+      self.db.table("users")
+      .select("*")
+      .eq("email",email)
+      .execute()
     )
 
-    try:
+    if existing.data:
+      return"Email Exists"
+    self.db.table("users").insert({
+      "username":username,
+      "email":email,
+      "password":hashed
+    }).execute()
+    return"Success"
 
-      self.db.cursor.execute(
-        """
-        INSERT INTO users(username,email,password)
-        VALUES(?,?,?)
-        """,
-        (username,email,hashed)
-      )
-
-      self.db.connection.commit()
-
-      return "Success"
-
-    except sqlite3.IntegrityError:
-      return "Email Exists"
 
   def login(self,email,password):
-    self.db.cursor.execute(
-      """
-      SELECT id,username,email,password
-      FROM users
-      WHERE email=?
-      """,
-      (email,)
+    result=(
+      self.db.table("users")
+      .select("*")
+      .eq("email",email)
+      .execute()
     )
-
-    user=self.db.cursor.fetchone()
-    if user is None:
+    if not result.data:
       return None
+    user=result.data[0]
+
     if bcrypt.checkpw(
         password.encode(),
-        user[3]
+        user["password"].encode()
     ):
         return{
-          "id":user[0],
-          "username":user[1],
-          "email":user[2]
+          "id":user["id"],
+          "username":user["username"],
+          "email":user["email"]
         }
 
     return None

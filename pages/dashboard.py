@@ -4,7 +4,9 @@ from database.task_db import TaskDB
 st.set_page_config(
   page_title="Dashboard",
   page_icon="📋",
-  layout="wide"
+  layout="wide",
+  initial_sidebar_state="collapsed"
+
 )
 
 if "user" not in st.session_state:

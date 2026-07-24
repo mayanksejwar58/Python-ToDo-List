@@ -3,7 +3,8 @@ from database.auth import Auth
 
 st.set_page_config(
   page_icon="🔐",
-  page_title="Login"
+  page_title="Login",
+  initial_sidebar_state="collapsed"
 )
 auth=Auth()
 

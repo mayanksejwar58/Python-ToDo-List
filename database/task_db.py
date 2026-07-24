@@ -3,88 +3,104 @@ from database.database import Database
 class TaskDB:
 
   def __init__(self):
-    self.db=Database()
+    self.db=Database().get_client()
 
   def add_task(self,user_id,task,priority,category,due_date,due_time):
-    self.db.cursor.execute(
-      """
-      Insert INTO tasks(user_id,task,priority,category,due_date,due_time)
-      Values(?,?,?,?,?,?)
-      """,
-      (user_id,task,priority,category,due_date,due_time)
-    )
-    self.db.connection.commit()
+    self.db.table("tasks").insert({
+      "user_id": user_id,
+      "task": task,
+      "priority": priority,
+      "category": category,
+      "due_date": str(due_date),
+      "due_time": str(due_time),
+      "completed": False
+    }).execute()
 
   def get_tasks(self,user_id):
-    self.db.cursor.execute(
-      """
-      SELECT id,task,completed,priority,category,due_date,due_time
-      FROM tasks
-      WHERE user_id=?
-      ORDER BY due_date,due_time
-      """,
-      (user_id,)
+    result=(
+      self.db
+      .table("tasks")
+      .select("*")
+      .eq("user_id",user_id)
+      .order("due_date")
+      .order("due_time")
+      .execute()
     )
-    return self.db.cursor.fetchall()
+    tasks=[]
+    for row in result.data:
+      tasks.append(
+        (
+          row["id"],
+          row["task"],
+          row["completed"],
+          row["priority"],
+          row["category"],
+          row["due_date"],
+          row["due_time"]
+        )
+      )
+    return tasks
 
   def delete_task(self,task_id):
-    self.db.cursor.execute(
-      """
-      DELETE FROM tasks
-      WHERE id=?
-      """,
-      (task_id,)
-    )
-    self.db.connection.commit()
+    self.db.table("tasks")\
+    .delete()\
+    .eq("id",task_id)\
+    .execute()
 
   def toggle_task(self,task_id,completed):
-    self.db.cursor.execute("""
-      UPDATE TASKS
-      SET completed=?
-      WHERE id=?
-      """,
-      (completed,task_id)
-    )
-    self.db.connection.commit()
+    self.db.table("tasks")\
+    .update({
+      "completed":completed
+    })\
+    .eq("id",task_id)\
+    .execute()
 
   def edit_task(self, task_id, task):
-    self.db.cursor.execute("""
-    UPDATE tasks
-    SET task=?
-    WHERE id=?
-    """,
-    (task, task_id)
-    )
-    self.db.connection.commit()
+    self.db.table("tasks")\
+    .update({
+      "task":task
+    })\
+    .eq("id",task_id)\
+    .execute()
 
   def search_task(self,user_id,keyword):
-    self.db.cursor.execute("""
-    SELECT id,task,completed,priority,category,due_date,due_time
-    FROM tasks
-    WHERE user_id=?
-    AND task LIKE?
-    ORDER BY due_date,due_time
-    """,
-    (user_id,f"%{keyword}%")
+    result=(
+      self.db
+      .table("tasks")
+      .select("*")
+      .eq("user_id", user_id)
+      .ilike("task", f"%{keyword}%")
+      .order("due_date")
+      .order("due_time")
+      .execute()
     )
-    return self.db.cursor.fetchall()
+    tasks=[]
+    for row in result.data:
+      tasks.append(
+        (
+          row["id"],
+          row["task"],
+          row["completed"],
+          row["priority"],
+          row["category"],
+          row["due_date"],
+          row["due_time"]
+        )
+      )
+    return tasks
+    
   def statistics(self, user_id):
-    self.db.cursor.execute(
-    "SELECT COUNT(*) FROM tasks WHERE user_id=?",
-    (user_id,)
+    result=(
+      self.db
+      .table("tasks")
+      .select("completed")
+      .eq("user_id",user_id)
+      .execute()
     )
-    total = self.db.cursor.fetchone()[0]
-
-    self.db.cursor.execute(
-    """
-    SELECT COUNT(*)
-    FROM tasks
-    WHERE user_id=?
-    AND completed=1
-    """,
-    (user_id,)
+    total=len(result.data)
+    completed=sum(
+      1 for row in result.data
+      if row["completed"]
     )
-    completed = self.db.cursor.fetchone()[0]
     pending=total-completed
-    return total,completed,pending
-  
+    return(total,completed,pending)

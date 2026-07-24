@@ -7,19 +7,25 @@ from database.database import Database
 from database.email_service import send_otp
 
 db = Database()
-
+st.set_page_config(
+  page_title="Forgot Password",
+  initial_sidebar_state="collapsed"
+)
 st.title("Forgot Password")
 
 email = st.text_input("Enter Email")
 
 if st.button("Send OTP"):
-  db.cursor.execute(
-    "SELECT id FROM users WHERE email=?",
-    (email,)
+  client=db.get_client()
+  result=(
+    client.table("users")
+    .select("*")
+    .eq("email",email)
+    .execute
   )
-  user = db.cursor.fetchone()
+  user=result.data
 
-  if user:
+  if len(user)>0:
     otp = str(random.randint(100000,999999))
     status=send_otp(email,otp)
     if status:
@@ -60,17 +66,12 @@ if st.button("Reset Password"):
         new_password.encode(),
         bcrypt.gensalt()
       )
-      db.cursor.execute("""
-        UPDATE users
-        SET password=?
-        WHERE email=?
-      """,
-      (
-        hashed,
+      client.table("users").update({
+        "password":hashed.decode()
+      }).eq(
+        "email",
         st.session_state.reset_email
-      )
-      )
-      db.connection.commit()
+      ).execute()
 
       del st.session_state.otp
       del st.session_state.otp_time
@@ -81,4 +82,3 @@ if st.button("Reset Password"):
       time.sleep(2)
       st.switch_page("pages/login.py")
       st.stop()
-      db.close()

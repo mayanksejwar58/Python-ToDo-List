@@ -16,8 +16,6 @@ display:none;
 </style>
 """, unsafe_allow_html=True)
 
-db=Database()
-db.create_table()
 
 if "user" in st.session_state:
   st.switch_page("pages/dashboard.py")

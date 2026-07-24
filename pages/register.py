@@ -6,7 +6,8 @@ auth=Auth()
 
 st.set_page_config(
   page_title="Sign-UP",
-  page_icon="📝"
+  page_icon="📝",
+  initial_sidebar_state="collapsed"
 )
 st.title("Create Account")
 st.caption("Create Your Account to continue")
