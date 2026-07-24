@@ -21,8 +21,12 @@ if st.button("Send OTP"):
     client.table("users")
     .select("*")
     .eq("email",email)
-    .execute
+    .execute()
   )
+  if not result.data:
+    st.error("Email Not Found")
+    st.stop()
+
   user=result.data
 
   if len(user)>0:
