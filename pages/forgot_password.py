@@ -7,6 +7,8 @@ from database.database import Database
 from database.email_service import send_otp
 
 db = Database()
+client=db.get_client()
+
 st.set_page_config(
   page_title="Forgot Password",
   initial_sidebar_state="collapsed"
@@ -16,7 +18,6 @@ st.title("Forgot Password")
 email = st.text_input("Enter Email")
 
 if st.button("Send OTP"):
-  client=db.get_client()
   result=(
     client.table("users")
     .select("*")
@@ -26,22 +27,19 @@ if st.button("Send OTP"):
   if not result.data:
     st.error("Email Not Found")
     st.stop()
+  user=result.data[0]
+  otp = str(random.randint(100000,999999))
+  status=send_otp(email,otp)
+  if status:
+    st.session_state.otp = otp
+    st.session_state.otp_time=time.time()
+    st.session_state.attempt=0
+    st.session_state.reset_email=email
 
-  user=result.data
-
-  if len(user)>0:
-    otp = str(random.randint(100000,999999))
-    status=send_otp(email,otp)
-    if status:
-      st.session_state.otp = otp
-      st.session_state.otp_time=time.time()
-      st.session_state.attempt=0
-      st.session_state.reset_email=email
-
-      st.success("OTP sent to your email")
-    else:
-      st.error("Unable to send OTP")
+    st.success("OTP sent to your email")
   else:
+    st.error("Unable to send OTP")
+else:
     st.error("Email Not Found")
   
 otp = st.text_input("Enter OTP")
