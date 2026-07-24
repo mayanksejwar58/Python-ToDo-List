@@ -3,3 +3,5 @@ todo.db
 __pycache__/
 *.pyc
 .vscode/
+.streamlit/secrets.toml
+.env.*
